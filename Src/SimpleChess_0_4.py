@@ -1,7 +1,7 @@
 import chess
 import chess.svg
-import random
-
+import chess.pgn
+import chess.engine
 
 def evaluate_board(board):
     piece_values = {
@@ -29,13 +29,14 @@ def get_best_move(board):
 
     for move in legal_moves:
         board.push(move)
-        eval = minimax(board, 2, False)  # Hĺbka hľadania
+        eval = minimax(board, 2, False)  # Hĺbka (napr 2)
         board.pop()
 
         if eval > best_eval:
             best_eval = eval
             best_move = move
 
+    print(f"Botov pohyb minimax: {best_move.uci()}")
     return best_move
 
 def minimax(board, depth, maximizing_player):
@@ -62,11 +63,19 @@ def minimax(board, depth, maximizing_player):
         return min_eval
 
 def play_chess():
+    color = input("Zadaj farbu: white/black")
     board = chess.Board()
+    if color.lower() == "white":
+        color = chess.WHITE
+    elif color.lower() == "black":
+        color = chess.BLACK
+    else:
+        print("Neplatná farba!")
+        return 1
 
     while not board.is_game_over():
         print(board)
-        if board.turn == chess.WHITE:
+        if board.turn == color:
             move = input("Tvoj ťah (vo formáte a2a4): ")
             move = chess.Move.from_uci(move.lower())
         else:
@@ -78,4 +87,4 @@ def play_chess():
     print("Koniec hry")
     print("Výsledok: " + board.result())
 
-play_chess()
+#play_chess()
