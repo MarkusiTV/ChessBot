@@ -101,26 +101,7 @@ def evaluate_board(board):
         chess.KING: 20000
     }
 
-
-    pawn_table_black = list(reversed(pawn_table))
-    knight_table_black = list(reversed(knight_table))
-    bishop_table_black = list(reversed(bishop_table))
-    rook_table_black = list(reversed(rook_table))
-    queen_table_black = list(reversed(queen_table))
-    king_midgame_table_black = list(reversed(king_midgame_table))
-    king_endgame_table_black = list(reversed(king_endgame_table))
-
     evaluation = 0
-
-    '''
-    for square in chess.SQUARES:
-        piece = board.piece_at(square)
-        if piece is not None:
-            value = piece_values[piece.piece_type]
-            evaluation += value if piece.color == chess.WHITE else -value
-
-    return evaluation
-    '''
 
     for square in chess.SQUARES:
         piece = board.piece_at(square)
@@ -138,7 +119,7 @@ def get_piece_square_value(piece, square, piece_values):
         chess.BISHOP: bishop_table,
         chess.ROOK: rook_table,
         chess.QUEEN: queen_table,
-        chess.KING: king_midgame_table  # Můžete zvolit king_endgame_table pro koncovou hru
+        chess.KING: king_midgame_table  #Alebo king_endgame_table pre endgame
     }
 
     if piece.color == chess.BLACK:
@@ -148,10 +129,10 @@ def get_piece_square_value(piece, square, piece_values):
             chess.BISHOP: bishop_table_black,
             chess.ROOK: rook_table_black,
             chess.QUEEN: queen_table_black,
-            chess.KING: king_midgame_table_black  # Můžete zvolit king_endgame_table_black pro koncovou hru
+            chess.KING: king_midgame_table_black  #Alebo king_endgame_table pre endgame
         }
 
-    # Získání hodnoty z tabulky podle pozice a typu figury
+    # Získánie hodnoty z tabuľky podľa pozície a typu figúrky
     file, rank = chess.square_file(square), chess.square_rank(square)
     return piece_square_tables[piece.piece_type][rank][file]
 
