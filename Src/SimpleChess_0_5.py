@@ -7,7 +7,7 @@ def evaluate_board(board):
         chess.BISHOP: 3,
         chess.ROOK: 5,
         chess.QUEEN: 9,
-        chess.KING: 0
+        chess.KING: 100
     }
 
     evaluation = 0

@@ -1,5 +1,4 @@
 import chess
-import chess.svg
 import random
 
 board = chess.Board()

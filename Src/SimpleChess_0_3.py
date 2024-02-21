@@ -1,5 +1,4 @@
 import chess
-import chess.svg
 
 def evaluate_board(board):
     piece_values = {

@@ -1,7 +1,4 @@
 import chess
-import chess.svg
-import chess.pgn
-import chess.engine
 
 def evaluate_board(board):
     piece_values = {
