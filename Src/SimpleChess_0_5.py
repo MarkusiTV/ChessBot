@@ -51,15 +51,15 @@ def minimax(board, depth, alpha, beta, maximizing_player):
 def get_best_move(board):
     legal_moves = list(board.legal_moves)
     best_move = None
-    alpha = float('-inf')
-    beta = float('inf')
+    alpha = float('inf')
+    beta = float('-inf')
 
     for move in legal_moves:
         board.push(move)
-        eval = minimax(board, 3, alpha, beta, False)  #Hĺbka (napr 2)
+        eval = minimax(board, 3, alpha, beta, maximizing_player)  #Hĺbka (napr 2)
         board.pop()
 
-        if eval > alpha:
+        if eval < alpha:
             alpha = eval
             best_move = move
 
@@ -91,4 +91,4 @@ def play_chess():
     print("Koniec hry")
     print("Výsledok: " + board.result())
 
-#play_chess()
+play_chess()
