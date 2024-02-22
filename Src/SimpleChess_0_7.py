@@ -92,17 +92,40 @@ piece_square_tables_black = {piece: [list(row) for row in reversed(table)] for p
 #print(piece_square_tables_black)
 
 def evaluate_board(board):
+    stand_pat = 0
 
-    evaluation = 0
+    if board.is_checkmate():
+        return -100000 if board.turn == chess.WHITE else 100000
 
     for square in chess.SQUARES:
         piece = board.piece_at(square)
         if piece is not None:
             value = piece_values[piece.piece_type]
             value += get_piece_square_value(piece, square)
-            evaluation += value if piece.color == chess.WHITE else -value
+            stand_pat += value if piece.color == chess.WHITE else -value
 
-    return evaluation
+    return quiescence_search(board, stand_pat, -100000, 100000, board.turn == chess.WHITE) / 100
+
+def quiescence_search(board, stand_pat, alpha, beta, maximizing_player):
+    if stand_pat >= beta:
+        return beta
+    if alpha < stand_pat:
+        alpha = stand_pat
+
+    legal_moves = list(board.legal_moves)
+    legal_captures = [move for move in legal_moves if board.is_capture(move)]
+
+    for move in legal_captures:
+        board.push(move)
+        score = -quiescence_search(board, -stand_pat, -beta, -alpha, not maximizing_player)
+        board.pop()
+
+        if score >= beta:
+            return beta
+        if score > alpha:
+            alpha = score
+
+    return alpha
 
 def get_piece_square_value(piece, square):
     table = piece_square_tables[piece.piece_type]
@@ -111,7 +134,6 @@ def get_piece_square_value(piece, square):
 
     file, rank = chess.square_file(square), chess.square_rank(square)
     return table[rank][file]
-
 
 def minimax(board, depth, alpha, beta, maximizing_player):
     if depth == 0 or board.is_game_over():
@@ -123,7 +145,7 @@ def minimax(board, depth, alpha, beta, maximizing_player):
         max_eval = float('-inf')
         for move in legal_moves:
             board.push(move)
-            eval = minimax(board, depth - 1, alpha, beta, False)  # Invert maximizing_player for the next level
+            eval = minimax(board, depth - 1, alpha, beta, False)
             board.pop()
             max_eval = max(max_eval, eval)
             alpha = max(alpha, eval)
@@ -134,13 +156,45 @@ def minimax(board, depth, alpha, beta, maximizing_player):
         min_eval = float('inf')
         for move in legal_moves:
             board.push(move)
-            eval = minimax(board, depth - 1, alpha, beta, True)  # Invert maximizing_player for the next level
+            eval = minimax(board, depth - 1, alpha, beta, True)  
             board.pop()
             min_eval = min(min_eval, eval)
             beta = min(beta, eval)
             if beta <= alpha:
                 break
         return min_eval
+
+''' Nový kód - minimax
+def minimax(board, depth, alpha, beta, maximizing_player):
+    if depth == 0 or board.is_game_over():
+        return evaluate_board(board)
+
+    legal_moves = list(board.legal_moves)
+
+    if maximizing_player:
+        max_eval = float('-inf')
+        for move in legal_moves:
+            board.push(move)
+            eval = minimax(board, depth - 1, alpha, beta, False)
+            board.pop()
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for move in legal_moves:
+            board.push(move)
+            eval = minimax(board, depth - 1, alpha, beta, True)  
+            board.pop()
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break
+        return min_eval
+
+'''
 
 def get_best_move(board, is_maximizing_player):
     legal_moves = list(board.legal_moves)
@@ -149,15 +203,7 @@ def get_best_move(board, is_maximizing_player):
 
     for move in legal_moves:
         board.push(move)
-        f = open("best-move-selection-d2.txt", "a")
-        f.write(str(move))
-        f.write("\n")
-        f.close()
         eval = minimax(board, 4, alpha, float('-inf'), is_maximizing_player)  # Nastavte beta na negatívnu nekonečno pre maximalizáciu
-        f = open("best-move-selection-d2.txt", "a")
-        f.write(str(eval))
-        f.write("\n\n")
-        f.close()
         board.pop()
 
         if eval < alpha:  # Zmena na "<" pre minimalizáciu
@@ -165,10 +211,6 @@ def get_best_move(board, is_maximizing_player):
             best_move = move
 
     print(f"Botov pohyb minimax-ABP-piecetables: {best_move.uci()}")
-    f = open("best-move-selection-d2.txt", "a")
-    f.write("Best move: ", best_move)
-    f.write("\n------------------------\n")
-    f.close()
     return best_move
  
 def play_chess():
@@ -184,14 +226,13 @@ def play_chess():
 
     while not board.is_game_over():
         print(board)
-        print("Hodnotenie pozície: ",evaluate_board(board)/100)
+        print("Hodnotenie pozície: ",evaluate_board(board))
         if board.turn == color:
             move = input("Tvoj ťah (vo formáte a2a4): ")
             move = chess.Move.from_uci(move.lower())
         else:
-            is_maximizing_player = board.turn != color # True pre Bielych, False pre Čiernych
+            is_maximizing_player = board.turn != color
             move = get_best_move(board, is_maximizing_player)
-            # print(f"Botov pohyb: {move.uci()}")
 
         board.push(move)
 
@@ -200,4 +241,3 @@ def play_chess():
 
 
 play_chess()
-#get_best_move(board=chess.Board())

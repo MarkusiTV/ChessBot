@@ -118,7 +118,7 @@ def get_piece_square_value(piece, square):
         chess.BISHOP: bishop_table,
         chess.ROOK: rook_table,
         chess.QUEEN: queen_table,
-        chess.KING: king_midgame_table  #Alebo EG table white
+        chess.KING: king_midgame_table  # Můžete zvolit king_endgame_table pro koncovou hru
     }
 
     if piece.color == chess.BLACK:
@@ -128,10 +128,10 @@ def get_piece_square_value(piece, square):
             chess.BISHOP: bishop_table_black,
             chess.ROOK: rook_table_black,
             chess.QUEEN: queen_table_black,
-            chess.KING: king_midgame_table_black  #Alebo endgame_table black
+            chess.KING: king_midgame_table_black  # Můžete zvolit king_endgame_table_black pro koncovou hru
         }
 
-    # Získanie hodnoty z tabulky podľa pozicie a typu figúrky
+    # Získání hodnoty z tabulky podle pozice a typu figury
     file, rank = chess.square_file(square), chess.square_rank(square)
     return piece_square_tables[piece.piece_type][rank][file]
 
@@ -167,15 +167,15 @@ def minimax(board, depth, alpha, beta, maximizing_player):
 def get_best_move(board, is_maximizing_player):
     legal_moves = list(board.legal_moves)
     best_move = None
-    alpha = float('-inf')
-    beta = float('inf')
+    alpha = float('inf')
+    beta = float('-inf')
 
     for move in legal_moves:
         board.push(move)
         eval = minimax(board, 4, alpha, beta, is_maximizing_player)  #Hĺbka (napr 2)
         board.pop()
 
-        if eval > alpha:
+        if eval < alpha:
             alpha = eval
             best_move = move
 
@@ -184,14 +184,12 @@ def get_best_move(board, is_maximizing_player):
     return best_move
 
 def play_chess():
-    color = input("Zadaj farbu: white/black")
+    color = input("Zadaj farbu: white/black ")
     board = chess.Board()
     if color.lower() == "white":
         color = chess.WHITE
-        mp = True
     elif color.lower() == "black":
         color = chess.BLACK
-        mp = False
     else:
         print("Neplatná farba!")
         return 1
@@ -205,8 +203,6 @@ def play_chess():
         else:
             is_maximizing_player = board.turn != color  # True pre Bielych, False pre Čiernych
             move = get_best_move(board, is_maximizing_player)
-            #print(f"Botov pohyb: {move.uci()}")
-            
 
         board.push(move)
 
