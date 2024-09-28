@@ -22,7 +22,7 @@ def evaluate_board(board):
 def get_best_move(board):
     legal_moves = list(board.legal_moves)
     best_move = None
-    best_eval = float('-inf') #if board.turn == chess.WHITE else float('inf')
+    best_eval = float('-inf') if board.turn == chess.WHITE else float('inf')
 
     for move in legal_moves:
         board.push(move)
@@ -30,9 +30,20 @@ def get_best_move(board):
         eval += random.randint(1,50)/500
         board.pop()
 
-        if eval > best_eval:
-            best_eval = eval
-            best_move = move
+        '''
+        if eval < best_eval:
+                best_eval = eval
+                best_move = move
+        '''
+
+        if board.turn == chess.BLACK:
+            if eval < best_eval:
+                best_eval = eval
+                best_move = move
+        elif board.turn == chess.WHITE:
+            if eval > best_eval:
+                best_eval = eval
+                best_move = move
 
     print("Eval: ", best_eval)
     return best_move
@@ -42,20 +53,32 @@ def minimax(board, depth, maximizing_player):
         return evaluate_board(board)
 
     legal_moves = list(board.legal_moves)
+    f = open("fajl.txt", "a")
 
     if maximizing_player:
         max_eval = float('-inf')
         for move in legal_moves:
+            print(move)
+            f.write(str(move))
+            f.write("\n")
             board.push(move)
             eval = minimax(board, depth - 1, False)
+            f.write(str(eval))
+            f.write("\n")
             board.pop()
             max_eval = max(max_eval, eval)
         return max_eval
     else:
         min_eval = float('inf')
         for move in legal_moves:
+            print(move)
+            f.write(str(move))
+            f.write("\n")
             board.push(move)
             eval = minimax(board, depth - 1, True)
+            f.write(str(eval))
+            f.write("\n")
+            print(eval, "\n")
             board.pop()
             min_eval = min(min_eval, eval)
         return min_eval
