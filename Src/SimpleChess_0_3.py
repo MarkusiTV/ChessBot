@@ -1,15 +1,17 @@
 import chess
 
 def evaluate_board(board):
+    #Hodnoty figúr
     piece_values = {
         chess.PAWN: 1,
         chess.KNIGHT: 3,
-        chess.BISHOP: 3,
+        chess.BISHOP: 3.5,
         chess.ROOK: 5,
         chess.QUEEN: 9,
         chess.KING: 100
     }
 
+    #Default eval je 0 a k nemu sa pripočítajú body za biele figúry a odpočítajú za čierne
     evaluation = 0
     for square in chess.SQUARES:
         piece = board.piece_at(square)
@@ -35,9 +37,6 @@ def test_evaluate_board():
 def get_best_move(board):
     legal_moves = list(board.legal_moves)
     
-    if not legal_moves:
-        return chess.Move.null()  # Defaultný ťah, ak ešte nebol žiadny v legalmoves
-    
     best_move = None
     best_eval = float('-inf')
 
@@ -49,8 +48,11 @@ def get_best_move(board):
         if eval > best_eval:
             best_eval = eval
             best_move = move
+
+    if not legal_moves:
+        return chess.Move.null()  #Ak neni žiadny move returne nahodny
     
-    print(f"Botov pohyb - eval: {best_move.uci()}")
+    print("Eval podla bota: ", best_eval)
     return best_move
 
 def test_get_best_move():
@@ -98,4 +100,4 @@ def play_chess():
 #test_evaluate_board()
 #test_get_best_move()
     
-#play_chess()
+play_chess()

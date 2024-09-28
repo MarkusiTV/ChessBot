@@ -33,5 +33,8 @@ def play_chess_opponent_bot(board):
     print(f"Botov pohyb - random: {move.uci()}")
     return move
 
-#play_chess_random_bot()
+#Zapni hru proti random botovi
+play_chess_random_bot()
+
+#Bot zahrá random ťah
 #play_chess_opponent_bot(board=chess.Board())

@@ -4,7 +4,7 @@ def evaluate_board(board):
     piece_values = {
         chess.PAWN: 1,
         chess.KNIGHT: 3,
-        chess.BISHOP: 3,
+        chess.BISHOP: 3.5,
         chess.ROOK: 5,
         chess.QUEEN: 9,
         chess.KING: 100
@@ -23,9 +23,6 @@ def evaluate_board(board):
 def get_best_move(board):
     legal_moves = list(board.legal_moves)
     
-    if not legal_moves:
-        return chess.Move.null()  # Defaultný ťah, ak ešte nebol žiadny v legalmoves
-    
     best_move = None
     best_eval = float('-inf')
 
@@ -37,8 +34,12 @@ def get_best_move(board):
         if eval > best_eval:
             best_eval = eval
             best_move = move
+
+    if not legal_moves:
+        return chess.Move.null()  # Defaultný ťah, ak ešte nebol žiadny v legalmoves
     
-    print(f"Botov pohyb - eval: {best_move.uci()}")
+    print(f"Botov pohyb: {best_move.uci()}")
+    print("Eval: ", best_eval)
     return best_move
 
 def play_chess():
