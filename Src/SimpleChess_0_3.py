@@ -43,6 +43,7 @@ def get_best_move(board):
     for move in legal_moves:
         board.push(move)
         eval = evaluate_board(board)
+        eval += random.randint(1,50)/500
         board.pop()
 
         if eval > best_eval:

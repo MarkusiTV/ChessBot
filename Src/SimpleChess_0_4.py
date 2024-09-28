@@ -1,10 +1,11 @@
 import chess
+import random
 
 def evaluate_board(board):
     piece_values = {
         chess.PAWN: 1,
         chess.KNIGHT: 3,
-        chess.BISHOP: 3,
+        chess.BISHOP: 3.5,
         chess.ROOK: 5,
         chess.QUEEN: 9,
         chess.KING: 100
@@ -16,24 +17,24 @@ def evaluate_board(board):
         if piece is not None:
             value = piece_values[piece.piece_type]
             evaluation += value if piece.color == chess.WHITE else -value
-
     return evaluation
 
 def get_best_move(board):
     legal_moves = list(board.legal_moves)
     best_move = None
-    best_eval = float('-inf')
+    best_eval = float('-inf') #if board.turn == chess.WHITE else float('inf')
 
     for move in legal_moves:
         board.push(move)
-        eval = minimax(board, 2, False)  # Hĺbka (napr 2)
+        eval = minimax(board, 3, False) #if board.turn == chess.WHITE else True)  # Hĺbka (napr 2) - v minimaxe je chyba, opraviť
+        eval += random.randint(1,50)/500
         board.pop()
 
         if eval > best_eval:
             best_eval = eval
             best_move = move
 
-    print(f"Botov pohyb minimax: {best_move.uci()}")
+    print("Eval: ", best_eval)
     return best_move
 
 def minimax(board, depth, maximizing_player):
@@ -84,4 +85,4 @@ def play_chess():
     print("Koniec hry")
     print("Výsledok: " + board.result())
 
-#play_chess()
+play_chess()
