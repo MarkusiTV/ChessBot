@@ -1,4 +1,5 @@
 import chess
+import random
 
 def evaluate_board(board):
     #Hodnoty figúr

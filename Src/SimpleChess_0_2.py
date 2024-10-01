@@ -34,7 +34,7 @@ def play_chess_opponent_bot(board):
     return move
 
 #Zapni hru proti random botovi
-play_chess_random_bot()
+#play_chess_random_bot()
 
 #Bot zahrá random ťah
-#play_chess_opponent_bot(board=chess.Board())
+play_chess_opponent_bot(board=chess.Board())

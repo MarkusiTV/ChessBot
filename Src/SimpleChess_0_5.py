@@ -55,8 +55,12 @@ def get_best_move(board):
     beta = float('-inf')
 
     for move in legal_moves:
+        if board.turn == chess.WHITE:
+            maximizing_player = True
+        else:
+            maximizing_player = False 
         board.push(move)
-        eval = minimax(board, 3, alpha, beta, maximizing_player)  #Hĺbka (napr 2)
+        eval = minimax(board, 5, alpha, beta, maximizing_player)  #Hĺbka (napr 2)
         board.pop()
 
         if eval < alpha:

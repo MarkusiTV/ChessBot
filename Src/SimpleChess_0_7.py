@@ -240,4 +240,5 @@ def play_chess():
     print("Výsledok: " + board.result())
 
 
-play_chess()
+#play_chess()
+get_best_move()
