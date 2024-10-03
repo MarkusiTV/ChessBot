@@ -1,14 +1,20 @@
 import chess
 import random
 
+#3p<N<B
+#R+p < N+B
+#B+N = R+1.5P
+#Q+P = 2R
+#+ 0.1(M-M') - MOBILITY BONUS
+
 def evaluate_board(board):
     piece_values = {
         chess.PAWN: 1,
-        chess.KNIGHT: 3,
-        chess.BISHOP: 3.5,
+        chess.KNIGHT: 3,15
+        chess.BISHOP: 3.35,
         chess.ROOK: 5,
         chess.QUEEN: 9,
-        chess.KING: 100
+        chess.KING: 300
     }
 
     evaluation = 0
